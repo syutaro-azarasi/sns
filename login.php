@@ -1,44 +1,31 @@
 <?php
-require('dbconnect.php');
+require('dbconnect.php');/*DBに通信*/
 session_start();
-/*
-if($_COOKIE['email'] != ''){
-  $_POST['email'] = $_COOKIE['email'];
-  $_POST['password'] = $_COOKIE['password'];
-  $_POST['save'] = 'on';
-}
-*/
-if(!empty($_POST)) {
 
- if($_POST['email'] != '' && $_POST['password'] != '') {
+/*ログイン情報の照会*/
+if(!empty($_POST)) {/*formから値が送られているかを判定*/
+ if($_POST['email'] != '' && $_POST['password'] != '') {/*メールアドレスとパスワードが両方入力されているか判定*/
    $login = $db ->prepare('SELECT * FROM members WHERE email=?
-   AND password=?');
+   AND password=?');/*クエリを発行してアカウント情報を取得*/
    $login -> execute(array(
      $_POST['email'],
-     sha1($_POST['password'])
+     sha1($_POST['password'])/*パスワードをマスキング*/
    ));
-
    $member = $login->fetch();
 
   if($member) {
      $_SESSION['id'] = $member['id'];
-     $_SESSION['time'] = time();
-/*
-if($_POST['save']=='on') {
-  setcookie('email', $_POST['email'], time()+60*60*24*14);
-  setcookie('password', $_POST['password'], time()+60*60*24*14);
-}*/
-     header('Location: ../post/index.php');
+     header('Location: ../post/index.php');/*ホーム画面へ*/
      exit();
   }
 
   else {
-     $error['login'] ='failed';
+     $error['login'] ='failed';/*入力情報が間違っていた場合*/
   }
 
  }
  else{
-  $error['login']='blank';
+  $error['login']='blank';/*入力が漏れていた場合*/
  }
 
 }
@@ -165,12 +152,11 @@ a{
    <label for="password">パスワード</label></br>
    <input type="password" name="password" maxlength="255"/><br>
   </div>
-  <div class="check">
-  <input type="checkbox" name="save" value="on">次回から自動的にログインする
-  </div>
   <?php if($error['login']=='failed'):?>
    <span class="error_messege">メールアドレスまたはパスワードが間違っています</span>
-  <?php endif;?>
+  <?php elseif($error['login']=='blank'):?>
+   <span class="error_messege">メールアドレスまたはパスワードが未入力です</span>
+ <?php endif;?>
  </div>
   <input class="login_botton" type="submit" value="GO"/>
  <div class="lead">
@@ -178,10 +164,6 @@ a{
   <a href="index.php"><b>新規登録</b></a></p>
  </div>
 </div>
-
-
-
 </form>
 </body>
 </html>
-<//body>
