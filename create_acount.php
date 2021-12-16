@@ -2,8 +2,8 @@
   require('dbconnect.php');/*DBに接続*/
   session_start();
 
-  if(!empty($_POST)) {
-    if($_POST['name']==''){/*名前が入力されているか*/
+  if(!empty($_POST)) {/*各項目が入力されているか*/
+    if($_POST['name']==''){
       $error['name']='blank';
     }
     if($_POST['email']=='') {
@@ -15,35 +15,34 @@
     if($_POST['password']=='') {
       $error['password']='blank';
     }
-
-  $fileName = $_FILES['image']['name'];
+  $fileName = $_FILES['image']['name'];/*画像ファイルを入力*/
   if(!empty($fileName)) {
-    $ext = substr($fileName, -4);
+    $ext = substr($fileName, -4);/*入力されたファイルが画像であるかを判定*/
     if ($ext != 'jpeg' && $ext != '.png' && $ext != '.gif') {
       $error['image'] = 'type';
     }
   }
 
-  if(empty($error)) {
-    $member = $db -> prepare('SELECT COUNT(*) AS cnt FROM members WHERE email=?');
+  if(empty($error)) {/*登録済みのメールアドレスでないかを判定*/
+    $member = $db -> prepare('SELECT COUNT(*) AS cnt FROM members WHERE email=?');/*DBに入力されたメールアドレスが何個あるかを所得*/
     $member -> execute(array($_POST['email']));
     $record = $member ->fetch();
     if($record['cnt']!=0){
       $error['email']='duplicate';
     }
   }
-  if(empty($error)) {
-    $image = date('YmdHis') . $_FILES['image']['name'];
+  if(empty($error)) {/*プロフィール画像をアップロード*/
+    $image = date('YmdHis') . $_FILES['image']['name'];/*ファイル名は登録した時間＋元のファイル名*/
     move_uploaded_file($_FILES['image']['tmp_name'], './member_picuture/'.$image);
 
-    $_SESSION['join'] = $_POST;
+    $_SESSION['join'] = $_POST;/*入力した登録情報をセッション保存*/
     $_SESSION['join']['image'] = $image;
     header('Location: check.php');
     exit();
   }
 }
 
-if($_REQUEST['action'] == 'rewrite') {
+if($_REQUEST['action'] == 'rewrite') {/*登録情報の修正に来たときに前に登録した情報を復元*/
  $_POST = $_SESSION['join'];
 }
 ?>
@@ -145,6 +144,7 @@ body {
    <input type="file" name="image" id="image"/>
   </label>
   <script>
+   /*プレビュー画像を表示*/
    document.getElementById('image').addEventListener('change', function (e) {
     var file = e.target.files[0];
     var blobUrl = window.URL.createObjectURL(file);
@@ -164,6 +164,5 @@ body {
    <input type="submit" id="submit"/>
   </label><br>
 </form>
-
 </body>
 </html>
