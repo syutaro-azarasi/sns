@@ -161,7 +161,7 @@ a{
   <input class="login_botton" type="submit" value="GO"/>
  <div class="lead">
   <p class="sentence">登録がまだの方はこちらから
-  <a href="index.php"><b>新規登録</b></a></p>
+  <a href="create_acount.php"><b>新規登録</b></a></p>
  </div>
 </div>
 </form>
