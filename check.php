@@ -1,23 +1,26 @@
 <?php
 session_start();
-require('dbconnect.php');
+require('dbconnect.php');/*DBに接続*/
 
 if(!isset($_SESSION['join'])) {
-  header('Location:index.php');
+  header('Location:create_acount.php');
   exit();
 }
-if(!empty($_POST)) {
-  $statement = $db -> prepare('INSERT INTO members set name=?, email=?,
-    password=?, picture=?, created=NOW()');
+if(!empty($_POST)) {/*「登録する」が押せれている場合はDBにアカウント情報を書きこむ*/
+  $statement = $db -> prepare('INSERT INTO members set 
+   name=?, 
+   email=?,
+   password=?, 
+   picture=?, 
+   created=NOW()');
   $statement -> execute(array(
     $_SESSION['join']['name'],
     $_SESSION['join']['email'],
     sha1($_SESSION['join']['password']),
     $_SESSION['join']['image']
   ));
-  echo $_POST['action'];
-unset($_SESSION['join']);
-header('Location: thank.php');
+unset($_SESSION['join']);/*登録に用いたセッションの削除*/
+header('Location: thank.php');/*登録完了画面へ*/
 exit();
 }
 ?>
