@@ -6,7 +6,7 @@ if(!isset($_SESSION['join'])) {
   header('Location:create_acount.php');
   exit();
 }
-if(!empty($_POST)) {/*「登録する」が押せれている場合はDBにアカウント情報を書きこむ*/
+if(!empty($_POST)) {/*「登録する」が押されている場合はDBにアカウント情報を書きこむ*/
   $statement = $db -> prepare('INSERT INTO members set 
    name=?, 
    email=?,
