@@ -1,5 +1,5 @@
 <?php
-$members = $db -> prepare('SELECT id, picture FROM members WHERE id=?');
+$members = $db -> prepare('SELECT * FROM members WHERE id=?');
 $members -> execute(array($_SESSION['id']));
 $member = $members -> fetch();
 ?>
