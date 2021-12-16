@@ -2,6 +2,7 @@
   require('dbconnect.php');/*DBに接続*/
   session_start();
 
+  　/*配列変数の要素のうち文字列が格納された要素が何かエラーのタイプを判定*/
   if(!empty($_POST)) {/*各項目が入力されているか*/
     if($_POST['name']==''){
       $error['name']='blank';
@@ -9,7 +10,7 @@
     if($_POST['email']=='') {
       $error['email']='blank';
     }
-    if(strlen($_POST['password'])<7) {
+    if(strlen($_POST['password'])<7) {/**/
       $error['password']='length';
     }
     if($_POST['password']=='') {
